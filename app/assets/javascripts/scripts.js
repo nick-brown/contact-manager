@@ -44,6 +44,10 @@
     App.Views.Contacts = Backbone.View.extend({
         tagName: 'ul',
 
+        initialize: function() {
+            this.collection.on('add', this.addContact, this);
+        },
+
         addContact: function(contact) {
             var contactView = new App.Views.Contact({ model: contact });
 
@@ -69,4 +73,7 @@ var contacts = new App.Collections.Contacts([
 ]);
 
 var contactsView = new App.Views.Contacts({ collection: contacts });
+
+
+contactsView.render().$el.appendTo('body');
 
