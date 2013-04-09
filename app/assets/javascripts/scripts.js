@@ -72,9 +72,23 @@
     });
 
 
-    // Edit View
-    App.Views.Edit = Backbone.View.extend({
-        template: template('editTemplate'),
+    // Add Contact View
+    App.Views.Add = Backbone.View.extend({
+        el: '#addContact',
+
+        events: {
+            'submit': 'submit'
+        },
+
+        submit: function(e) {
+            e.preventDefault();
+
+            var contactName = $(e.currentTarget).find('input[type="text"]').val();
+
+            var contact = new App.Models.Contact({ first_name: contactName });
+
+            this.collection.add(contact);
+        },
 
         render: function() {
             var template = this.template( this.model.toJSON() );
