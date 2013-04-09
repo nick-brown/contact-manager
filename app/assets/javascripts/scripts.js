@@ -38,7 +38,8 @@
     });
 
     App.Collections.Contacts = Backbone.Collection.extend({
-        model: App.Models.Contact
+        model: App.Models.Contact,
+        url: '/contacts'
     });
 
     App.Views.Contacts = Backbone.View.extend({
@@ -66,14 +67,15 @@
 })();
 
 
-var contacts = new App.Collections.Contacts([
-    {},
-    {},
-    {}
-]);
+$(function(){
+
+
+var contacts = new App.Collections.Contacts();
+
+contacts.fetch();
 
 var contactsView = new App.Views.Contacts({ collection: contacts });
 
-
 contactsView.render().$el.appendTo('body');
 
+});
