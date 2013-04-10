@@ -1,7 +1,11 @@
-HTMLFormElement.prototype.boom = function() {
-    return this.find('input:text, input:password, input:file, select, textarea').val('');
-    //this.find('input:radio, input:checkbox').removeAttr('checked').removeAttr('selected');
-};
+(function( $ ){
+    $.fn.clearForm = function() {
+        if(this[0].tagName === 'FORM') {
+            this.find('input:text, input:password, input:file, select, textarea').val('');
+            this.find('input:radio, input:checkbox').removeAttr('checked').removeAttr('selected');
+        }
+    };
+})( jQuery );
 
 (function() {
     window.App = {
@@ -88,8 +92,6 @@ HTMLFormElement.prototype.boom = function() {
         submit: function(e) {
             e.preventDefault();
 
-            this.el.boom();
-
             var data = Backbone.Syphon.serialize(this);
             var contact = new App.Models.Contact(data);
 
@@ -97,8 +99,7 @@ HTMLFormElement.prototype.boom = function() {
 
             contact.save();
 
-            this.$el.find('input:text, input:password, input:file, select, textarea').val('');
-            this.$el.find('input:radio, input:checkbox').removeAttr('checked').removeAttr('selected');
+            this.$el.clearForm();
         },
 
         render: function() {
