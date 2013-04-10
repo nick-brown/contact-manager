@@ -24,23 +24,46 @@
     };
 
 
+    // Initialize the Application
+    App.Init = function() {
+        window.contacts = new App.Collections.Contacts();
+        contacts.fetch();
+
+        var contactsView = new App.Views.Contacts({ collection: contacts });
+        contactsView.render().$el.appendTo('body');
+
+        addContactForm = new App.Views.Add({ collection: contacts }).render().$el;
+        $('#addContact').html( addContactForm );
+    };
+
+
     // Model and View
     App.Models.Contact = Backbone.Model.extend({
         defaults: {
-            first_name: 'dave',
+            first_name: '',
             last_name: '',
-            phone: '5555555555'
+            phone: ''
         }
     });
 
     App.Views.Contact = Backbone.View.extend({
         tagName: 'li',
 
+        template: template('contactTemplate'),
+
         initialize: function() {
             this.model.on('change', this.render, this);
         },
 
-        template: template('contactTemplate'),
+        events: {
+            'click .edit': 'edit'
+        },
+
+        edit: function() {
+            var editView = new App.Views.Add({ model: this.model });
+
+            $('#addContact').html( editView.render().$el );
+        },
 
         render: function() {
             var template = this.template( this.model.toJSON() );
@@ -83,26 +106,42 @@
 
     // Add Contact View
     App.Views.Add = Backbone.View.extend({
-        el: '#addContact',
+        tagName: 'form',
+
+        template: template('addTemplate'),
 
         events: {
             'submit': 'submit'
         },
 
+
         submit: function(e) {
             e.preventDefault();
 
             var data = Backbone.Syphon.serialize(this);
-            var contact = new App.Models.Contact(data);
 
-            this.collection.add(contact);
+            this.model.set(data);
 
-            contact.save();
+            if( this.model.isNew() ) {
+                this.collection.add(this.model);
+            }
+
+            this.model.save();
+
+            // TODO: When the form submits a model that is not new, repopulate with a new model
+
+            this.model = new App.Models.Contact();
+
+            console.log( this.model.toJSON() );
+
+
 
             this.$el.clearForm();
         },
 
         render: function() {
+            this.model = typeof(this.model) === 'object' ? this.model : new App.Models.Contact();
+
             var template = this.template( this.model.toJSON() );
 
             this.$el.html( template );
@@ -114,17 +153,4 @@
 })();
 
 
-$(function(){
-
-    window.contacts = new App.Collections.Contacts();
-
-    contacts.fetch();
-
-    var contactsView = new App.Views.Contacts({ collection: contacts });
-
-    contactsView.render().$el.appendTo('body');
-
-    new App.Views.Add({ collection: contacts });
-
-
-});
+App.Init();
