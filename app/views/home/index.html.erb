@@ -1,26 +1,28 @@
 <h1>Home#index</h1>
 <p>Find me in app/views/home/index.html.erb</p>
 
-<form id="addContact" action="">
+<div id="addContact"></div>
+
+<script type="text/template" id="addTemplate">
   <label for="first_name">first name:</label>
-  <input name="first_name" type="text" />
+  <input name="first_name" type="text" value="{{ first_name }}" />
 
   <br>
 
   <label for="last_name">last name:</label>
-  <input name="last_name" type="text" />
+  <input name="last_name" type="text" value="{{ last_name }}" />
 
   <br>
 
   <label for="phone">phone number:</label>
-  <input name="phone" type="text" />
+  <input name="phone" type="text" value="{{ phone }}" />
 
   <br>
 
-  <input type="submit" value="Add New Contact" />
-</form>
+  <input type="submit" value="Save" />
+</script>
 
 <script type="text/template" id="contactTemplate">
-  {{ first_name }} {{ last_name }} - {{ phone }}
+  {{ first_name }} {{ last_name }} - {{ phone }}  <input type="button" class="edit" value="edit" />
 </script>
 
