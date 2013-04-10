@@ -14,5 +14,6 @@
 //= require jquery_ujs
 //= require underscore
 //= require backbone
+//= require backbone.syphon
 //= require scripts
 //= require_tree .

@@ -1,3 +1,8 @@
+HTMLFormElement.prototype.boom = function() {
+    return this.find('input:text, input:password, input:file, select, textarea').val('');
+    //this.find('input:radio, input:checkbox').removeAttr('checked').removeAttr('selected');
+};
+
 (function() {
     window.App = {
         Models: {},
@@ -83,11 +88,17 @@
         submit: function(e) {
             e.preventDefault();
 
-            var contactName = $(e.currentTarget).find('input[type="text"]').val();
+            this.el.boom();
 
-            var contact = new App.Models.Contact({ first_name: contactName });
+            var data = Backbone.Syphon.serialize(this);
+            var contact = new App.Models.Contact(data);
 
             this.collection.add(contact);
+
+            contact.save();
+
+            this.$el.find('input:text, input:password, input:file, select, textarea').val('');
+            this.$el.find('input:radio, input:checkbox').removeAttr('checked').removeAttr('selected');
         },
 
         render: function() {
@@ -111,6 +122,8 @@ $(function(){
     var contactsView = new App.Views.Contacts({ collection: contacts });
 
     contactsView.render().$el.appendTo('body');
+
+    new App.Views.Add({ collection: contacts });
 
 
 });
