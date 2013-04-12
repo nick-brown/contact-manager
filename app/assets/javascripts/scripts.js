@@ -32,20 +32,17 @@
         var contactsView = new App.Views.Contacts({ collection: contacts });
         contactsView.render().$el.appendTo('body');
 
-        window.addContactForm = new App.Views.Add({ collection: contacts }).render().$el;
+        var addContactForm = new App.Views.Add({ collection: contacts }).render().$el;
         $('#addContact').html( addContactForm );
     };
 
 
     // Model and View
     App.Models.Contact = Backbone.Model.extend({
-        initialize: function() {
-            this.on('error', function() { alert('stop')}, this );
-        },
-
         validate: function(attrs) {
-            if ( attrs.first_name.length <= 5 || attrs.last_name.length <= 5 ) {
-                alert('less');
+            alert(attrs.first_name.length);
+            if ( attrs.first_name.length < 1 ) {
+                alert('it\'s less than 1');
                 return 'Name must have a length';
             }
         }
